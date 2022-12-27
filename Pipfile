@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 mitmproxy = "*"
 websockets = "*"
+protobuf = "*"
+betterproto = {extras = ["compiler"], version = "*"}
 
 [dev-packages]
 

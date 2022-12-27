@@ -7,8 +7,8 @@ refieldname = re.compile(r'[a-z]{1}\.([a-zA-Z0-9\_]+)\s\=')
 retype = re.compile(r'[a-z]{1}\.[a-zA-Z0-9\_]+\s\=\s[a-zA-Z0-9]\.([a-zA-Z0-9]+)\(\)\;')
 reobjtype = re.compile(r'[a-z]{1}\.[a-zA-Z0-9\_]+\s\=\s[a-zA-Z]{1}\.im\_proto\.([a-zA-Z]+)\.decode')
 
-rerepeatname = re.compile(r'[a-z]{1}\.([a-zA-Z0-9\_]+)\.push\((.*?)\);');
-
+rerepeatname = re.compile(r'[a-z]{1}\.([a-zA-Z0-9\_]+)\.push\((.*?)\);')
+reempty = re.compile(r'[a-z]{1}\.([a-zA-Z0-9\_]+)\s===\s[a-z]{1}\.emptyObject\s\&\&')
 
 
 with open('./assets/vendors.b984d657.js', 'r') as out:
@@ -41,6 +41,7 @@ def extract_field(text):
                 repeatnames = rerepeatname.findall(field[1])
                 
                 if len(repeatnames) == 0:
+                    
                     continue
                 
                 repeatnames = repeatnames[0]

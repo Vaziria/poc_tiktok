@@ -1,5 +1,6 @@
 syntax ="proto3"; 
 
+package tpayload;
 
 message Frame {
 
@@ -14,12 +15,6 @@ message Frame {
 
 }
 
-message Frame {
-
-	string key = 1;
-	string value = 2;
-
-}
 
 message PropertyItem {
 
@@ -873,6 +868,10 @@ message RequestBody {
 
 }
 
+message Headers {
+
+}
+
 message Request {
 
 	int32 cmd = 1;
@@ -889,6 +888,10 @@ message Request {
 	string device_type = 12;
 	string os_version = 13;
 	string version_code = 14;
+    Headers headers = 15;
+    int32 config_id = 16;
+    TokenInfo token_info = 17;
+    int32 auth_type = 18;
 
 }
 
