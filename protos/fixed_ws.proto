@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+
+message MessagesPerUserInitV2RequestBody {
+
+	int64 cursor = 1;
+	int32 new_user = 2;
+	int32 init_sub_type = 3;
+
+}
+
+
+
+message RequestBody {
+
+    MessagesPerUserInitV2RequestBody messages_per_user_init_v2_body = 203;
+
+}
+
+
+message Headers {
+
+}
+
+message Request {
+
+	int32 cmd = 1;
+	int64 sequence_id = 2;
+	string sdk_version = 3;
+	string token = 4;
+	int32 refer = 5;
+	int32 inbox_type = 6;
+	string build_number = 7;
+	RequestBody body = 8;
+	string device_id = 9;
+	string channel = 10;
+	string device_platform = 11;
+	string device_type = 12;
+	string os_version = 13;
+	string version_code = 14;
+    Headers headers = 15;
+    int32 config_id = 16;
+    TokenInfo token_info = 17;
+    int32 auth_type = 18;
+
+}
+
+message TokenInfo {
+
+	int32 mark_id = 1;
+	int32 type = 2;
+	int32 app_id = 3;
+	int64 user_id = 4;
+	int64 timestamp = 5;
+
+}
