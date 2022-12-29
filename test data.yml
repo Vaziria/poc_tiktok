@@ -1,0 +1,25 @@
+token: Ee._.Instance.cachedToken,
+sid: this.option.sessionId,
+aid: this.option.appId,
+fpid: this.option.fpId,
+device_id: this.option.deviceId,
+access_key: xt(this.option.fpId + this.option.appKey  + this.option.deviceId + "f8a69f1719916z"),
+device_platform: this.option.devicePlatform,
+version_code: this.option.versionCode
+
+
+appkey = "b42d99769353ce6304e74fb597e36e90" 
+
+
+
+
+token=5J2leym4BvN3I5QXWBe11uYtlrDPs2aMpdNGJZRDdFFPaV6YH2I1UN  ---> OuterCid
+aid=5341
+fpid=92
+
+device_id=7080217658917961989  ----> pigeonCid
+
+access_key=76f062ec751ef9990cfb9351ff8f52c4
+device_platform=web
+version_code=10000
+websocket_switch_region=ID

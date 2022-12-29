@@ -2,25 +2,16 @@ package seller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/tebeka/selenium"
 )
 
-type SocketQuery struct {
-	Token                 string `schema:"token"`
-	Aid                   int32  `schema:"aid"`
-	Fpid                  int32  `schema:"fpid"`
-	DeviceId              string `schema:"device_id"`
-	AccessKey             string `schema:"access_key"`
-	DevicePlatform        string `schema:"device_platform"`
-	VersionCode           int32  `schema:"version_code"`
-	WebsocketSwitchRegion string `schema:"websocket_switch_region"`
-}
+var locSession = "data/sessions/"
+var locProfile = "data/profiles/"
 
 type Akun struct {
-	Token   string
 	Cookies []http.Cookie
-	QueryWs SocketQuery
 }
 
 type AkunService struct {
@@ -28,29 +19,28 @@ type AkunService struct {
 	Browser     *Browser
 }
 
-func (s *AkunService) GetAkunSession(profile string) *Akun {
+func (s *AkunService) getAkunFromSelenium(name string) *Akun {
 
+	profile := locProfile + name
 	driver := s.Browser.CreateDriver(profile)
 	defer driver.Close()
 
 	driver.Get("https://seller-id.tiktok.com/chat")
+	time.Sleep(5 * time.Second)
 
 	cookies := getHttpCookies(driver)
 
 	akun := &Akun{
 		Cookies: cookies,
-		// QueryWs: socketQuery,
 	}
 
-	service := SellerService{
-		Akun: akun,
-	}
+	// <-SocketQChan
 
-	service.GetShopAndCsInfo()
-	service.GetTokenInfo()
-
-	<-SocketQChan
 	return akun
+}
+
+func (s *AkunService) GetAkunSession(name string) *Akun {
+	return s.getAkunFromSelenium(name)
 }
 
 func CreateAkunService() *AkunService {

@@ -1,12 +1,13 @@
 package seller
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 )
 
-type SellerService struct {
+type SellerApi struct {
 	Akun *Akun
 }
 
@@ -23,7 +24,7 @@ type TccConfig struct {
 	AllowUseVideo bool `json:"allowUseVideo"`
 }
 
-type ShopCsInfoRes struct {
+type ShopCsInfoData struct {
 	ShopName            string              `json:"shopName"`
 	PigeonShopId        string              `json:"pigeonShopId"`
 	ShopLogo            string              `json:"shopLogo"`
@@ -55,9 +56,11 @@ var defaultHeader = map[string][]string{
 	"User-Agent":         {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},
 }
 
-func (s *SellerService) GetShopAndCsInfo() {
+func (s *SellerApi) GetShopAndCsInfo() ShopCsInfoData {
 
 	url := "https://seller-id.tiktok.com/chat/api/seller/getShopAndCsInfo?PIGEON_BIZ_TYPE=1&aid=4068"
+	var resdata Response[ShopCsInfoData]
+
 	req, err := http.NewRequest("GET", url, nil)
 	client := &http.Client{}
 
@@ -81,29 +84,31 @@ func (s *SellerService) GetShopAndCsInfo() {
 	}
 
 	data, err := io.ReadAll(resp.Body)
+	json.Unmarshal(data, &resdata)
 
 	// error handle
 	if err != nil {
 		fmt.Printf("error = %s \n", err)
 	}
 
-	// Print response
-	fmt.Printf("Response = %s", string(data))
+	return resdata.Data
 
 }
 
-// {
-//     "token": "DlZTLo19XB0MxvOHyWIWtHRKUz41mGlzXbUhNvDcIWWvGkG6FUdx43",
-//     "env": "",
-//     "pigeonCid": "7080217658917961989",
-//     "idcRegion": "maliva",
-//     "wsUrl": "wss://oec-im-frontier-va.tiktokglobalshop.com/ws/v2",
-//     "bizServiceId": 20041,
-//     "apiUrl": "https://imapi-va-oth.isnssdk.com/"
-// }
+type TokenData struct {
+	Token        string `json:"token"`
+	Env          string `json:"env"`
+	PigeonCid    string `json:"pigeonCid"`
+	IdcRegion    string `json:"idcRegion"`
+	WsUrl        string `json:"wsUrl"`
+	BizServiceId int32  `json:"bizServiceId"`
+	ApiUrl       string `json:"apiUrl"`
+}
 
-func (s *SellerService) GetTokenInfo() {
-	url := "https://seller-id.tiktok.com/chat/api/seller/token?PIGEON_BIZ_TYPE=1&oec_region=ID&aid=4068&oec_seller_id=7494567309891832821"
+func (s *SellerApi) GetTokenInfo(sellerId string) TokenData {
+	var resdata Response[TokenData]
+
+	url := "https://seller-id.tiktok.com/chat/api/seller/token?PIGEON_BIZ_TYPE=1&oec_region=ID&aid=4068&oec_seller_id=" + sellerId
 	req, err := http.NewRequest("GET", url, nil)
 	client := &http.Client{}
 
@@ -127,12 +132,12 @@ func (s *SellerService) GetTokenInfo() {
 	}
 
 	data, err := io.ReadAll(resp.Body)
+	json.Unmarshal(data, &resdata)
 
 	// error handle
 	if err != nil {
 		fmt.Printf("error = %s \n", err)
 	}
 
-	// Print response
-	fmt.Printf("Response = %s", string(data))
+	return resdata.Data
 }
