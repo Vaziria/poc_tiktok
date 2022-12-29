@@ -1,10 +1,21 @@
-package main
+package seller
 
 import (
 	"net/http"
 
 	"github.com/tebeka/selenium"
 )
+
+type SocketQuery struct {
+	Token                 string `schema:"token"`
+	Aid                   int32  `schema:"aid"`
+	Fpid                  int32  `schema:"fpid"`
+	DeviceId              string `schema:"device_id"`
+	AccessKey             string `schema:"access_key"`
+	DevicePlatform        string `schema:"device_platform"`
+	VersionCode           int32  `schema:"version_code"`
+	WebsocketSwitchRegion string `schema:"websocket_switch_region"`
+}
 
 type Akun struct {
 	Token   string
@@ -26,13 +37,19 @@ func (s *AkunService) GetAkunSession(profile string) *Akun {
 
 	cookies := getHttpCookies(driver)
 
-	socketQuery := <-SocketQChan
-
 	akun := &Akun{
 		Cookies: cookies,
-		QueryWs: socketQuery,
+		// QueryWs: socketQuery,
 	}
 
+	service := SellerService{
+		Akun: akun,
+	}
+
+	service.GetShopAndCsInfo()
+	service.GetTokenInfo()
+
+	<-SocketQChan
 	return akun
 }
 

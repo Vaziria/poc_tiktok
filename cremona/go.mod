@@ -2,6 +2,8 @@ module github.com/vaziria/cremona
 
 go 1.19
 
+require golang.org/x/net v0.4.0
+
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
@@ -12,5 +14,6 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/tebeka/selenium v0.9.9 // indirect
-	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/text v0.5.0 // indirect
 )

@@ -1,16 +1,19 @@
 package main
 
+import (
+	"github.com/vaziria/cremona/seller"
+)
+
 func main() {
-	proxy := NewConfigProxy()
+	proxy := seller.NewConfigProxy()
 
-	browser := NewBrowser(proxy.Addr)
+	browser := seller.NewBrowser(proxy.Addr)
 	defer browser.Service.Stop()
-	go StartProxy(proxy)
+	go seller.StartProxy(proxy)
 
-	service := AkunService{
+	service := seller.AkunService{
 		ProxyListen: proxy.Addr,
 		Browser:     browser,
 	}
-
 	service.GetAkunSession("ttest")
 }
