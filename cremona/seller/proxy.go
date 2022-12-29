@@ -1,15 +1,15 @@
 package seller
 
 import (
+	"encoding/json"
 	"log"
 	"strings"
 
-	"github.com/gorilla/schema"
 	"github.com/kardianos/mitmproxy/cert"
 	"github.com/kardianos/mitmproxy/proxy"
 )
 
-var SocketQChan = make(chan SocketQuery, 1)
+var TokenChan = make(chan TokenData, 1)
 
 type ConfigProxy struct {
 	Addr string
@@ -24,26 +24,15 @@ func (addon *AuthGetter) ClientDisconnected(client *proxy.ClientConn)   {}
 func (addon *AuthGetter) ServerConnected(connCtx *proxy.ConnContext)    {}
 func (addon *AuthGetter) ServerDisconnected(connCtx *proxy.ConnContext) {}
 func (addon *AuthGetter) Requestheaders(f *proxy.Flow)                  {}
-func (addon *AuthGetter) Response(flow *proxy.Flow)                     {}
-func (addon *AuthGetter) Request(flow *proxy.Flow) {
-	url := flow.Request.URL.Path
+func (addon *AuthGetter) Request(flow *proxy.Flow)                      {}
+func (addon *AuthGetter) Response(flow *proxy.Flow) {
+	u := flow.Request.URL.Path
 
-	rawQuery := flow.Request.URL.Query()
+	if strings.Contains(u, "/seller/token") {
+		var resdata Response[TokenData]
 
-	if strings.Contains(url, "/ws/v2") {
-		log.Println("getting Query Websocket")
-
-		var query SocketQuery
-
-		decoder := schema.NewDecoder()
-
-		err := decoder.Decode(&query, rawQuery)
-
-		if err != nil {
-			log.Println("Gagal Parse Query Websocket")
-		} else {
-			SocketQChan <- query
-		}
+		json.Unmarshal(flow.Response.Body, &resdata)
+		TokenChan <- resdata.Data
 
 	}
 

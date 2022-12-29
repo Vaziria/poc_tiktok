@@ -1,0 +1,1473 @@
+syntax ="proto3"; 
+
+package tpayload;
+
+message Frame {
+
+	uint64 seqid = 1;
+	uint64 logid = 2;
+	int32 service = 3;
+	int32 method = 4;
+	repeated Frame headers = 5;
+	string payload_encoding = 6;
+	string payload_type = 7;
+	bytes payload = 8;
+
+}
+
+
+message PropertyItem {
+
+	int64 uid = 1;
+	string sec_uid = 2;
+	int64 create_time = 3;
+	string idempotent_id = 4;
+	string value = 5;
+
+}
+
+message PropertyItemList {
+
+	
+
+}
+
+message MessageBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 server_message_id = 3;
+	int64 index_in_conversation = 4;
+	int64 conversation_short_id = 5;
+	int32 message_type = 6;
+	int64 sender = 7;
+	string content = 8;
+
+}
+
+message ReferenceInfo {
+
+	int64 referenced_message_id = 1;
+	string hint = 2;
+	int64 ref_message_type = 3;
+	int32 referenced_message_status = 4;
+	int64 root_message_id = 5;
+	int64 root_message_conv_index = 6;
+
+}
+
+message Participant {
+
+	int64 user_id = 1;
+	int64 sort_order = 2;
+	int32 role = 3;
+	string alias = 4;
+	string sec_uid = 5;
+	int32 blocked = 6;
+	int64 left_block_time = 7;
+
+}
+
+message ParticipantsPage {
+
+	repeated Participant participants = 1;
+	bool has_more = 2;
+	int64 cursor = 3;
+
+}
+
+message ConversationInfoV2 {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	string ticket = 4;
+	ParticipantsPage first_page_participants = 6;
+	int32 participants_count = 7;
+	bool is_participant = 8;
+	int32 inbox_type = 9;
+	Participant user_info = 20;
+	ConversationCoreInfo conversation_core_info = 50;
+	ConversationSettingInfo conversation_setting_info = 51;
+
+}
+
+message ConversationCoreInfo {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 info_version = 4;
+	string name = 5;
+	string desc = 6;
+	string icon = 7;
+	int32 inbox_type = 8;
+	string notice = 9;
+
+}
+
+message ConversationSettingInfo {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 min_index = 4;
+	int64 read_index = 5;
+	int32 mute = 6;
+	int32 stick_on_top = 7;
+	int32 inbox_type = 8;
+
+}
+
+message MessagesPerUserRequestBody {
+
+	int64 cursor = 1;
+	int32 limit = 2;
+
+}
+
+message MessagesPerUserResponseBody {
+
+	repeated MessageBody messages = 1;
+	int64 next_cursor = 2;
+	bool has_more = 3;
+
+}
+
+message MessagesPerUserInitV2RequestBody {
+
+	int64 cursor = 1;
+	int32 new_user = 2;
+	int32 init_sub_type = 3;
+
+}
+
+message MessagesPerUserInitV2ResponseBody {
+
+	repeated MessageBody messages = 1;
+	repeated ConversationInfoV2 conversations = 2;
+	int64 per_user_cursor = 3;
+	int64 next_cursor = 4;
+	bool has_more = 5;
+
+}
+
+message MessagesInConversationRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int32 direction = 4;
+	int64 anchor_index = 5;
+	int32 limit = 6;
+
+}
+
+message MessagesInConversationResponseBody {
+
+	repeated MessageBody messages = 1;
+	int64 next_cursor = 2;
+	bool has_more = 3;
+
+}
+
+message CreateConversationV2RequestBody {
+
+	int32 conversation_type = 1;
+	repeated int64 participants = 2;
+	bool persistent = 3;
+	string idempotent_id = 4;
+	string name = 6;
+	string avatar_url = 7;
+	string description = 8;
+
+}
+
+message CreateConversationV2ResponseBody {
+
+	int64 check_code = 2;
+	string check_message = 3;
+	string extra_info = 4;
+	int32 status = 5;
+
+}
+
+message SendUserActionRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int32 action_type = 4;
+
+}
+
+message SendInputStatusRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int32 status = 4;
+
+}
+
+message DeleteConversationRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 last_message_index = 4;
+
+}
+
+message DissolveConversationRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message DeleteMessageRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 message_id = 4;
+
+}
+
+message MarkConversationReadRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 read_message_index = 4;
+	int64 conv_unread_count = 5;
+	int64 total_unread_count = 6;
+
+}
+
+message GetConversationParticipantsReadIndexV3RequestBody {
+
+	int64 conversation_short_id = 1;
+	int32 conversation_type = 2;
+	string conversation_id = 3;
+
+}
+
+message GetConversationParticipantsReadIndexV3ResponseBody {
+
+	
+
+}
+
+message ParticipantReadIndex {
+
+	int64 user_id = 1;
+	string sec_uid = 2;
+	int64 index = 3;
+
+}
+
+message GetConversationParticipantsMinIndexV3RequestBody {
+
+	int64 conversation_short_id = 1;
+	int32 conversation_type = 2;
+	string conversation_id = 3;
+
+}
+
+message GetConversationParticipantsMinIndexV3ResponseBody {
+
+	
+
+}
+
+message ParticipantMinIndex {
+
+	int64 user_id = 1;
+	string sec_uid = 2;
+	int64 index = 3;
+
+}
+
+message SendMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	string content = 4;
+
+}
+
+message ReferencedMessageInfo {
+
+	int64 referenced_message_id = 1;
+	string hint = 2;
+	int64 root_message_id = 3;
+	int64 root_message_conv_index = 4;
+
+}
+
+message SendMessageResponseBody {
+
+	int64 server_message_id = 1;
+	string extra_info = 2;
+	int32 status = 3;
+	string client_message_id = 4;
+	int64 check_code = 5;
+	string check_message = 6;
+
+}
+
+message NewMessageNotify {
+
+	string conversation_id = 2;
+	int32 conversation_type = 3;
+	int32 notify_type = 4;
+	MessageBody message = 5;
+	int64 previous_cursor = 6;
+	int64 next_cursor = 7;
+	int64 index_in_conversation = 8;
+	ReferenceInfo ref_msg_info = 15;
+
+}
+
+message ConversationsPerUserByFavoriteV2RequestBody {
+
+	int64 cursor = 1;
+	int32 limit = 2;
+
+}
+
+message ConversationsPerUserByTopV2RequestBody {
+
+	int64 cursor = 1;
+	int32 limit = 2;
+
+}
+
+message GetConversationInfoV2RequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message GetConversationInfoListV2RequestBody {
+
+	
+
+}
+
+message GetConversationInfoListV2ResponseBody {
+
+	
+
+}
+
+message GetConversationInfoListByFavoriteV2ResponseBody {
+
+	repeated ConversationInfoV2 conversation_info_list = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message GetConversationInfoListByTopV2ResponseBody {
+
+	repeated ConversationInfoV2 conversation_info_list = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message RecallMessageRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 server_message_id = 4;
+
+}
+
+message ConversationAddParticipantsRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	repeated int64 participants = 4;
+
+}
+
+message SecUidPair {
+
+	int64 uid = 1;
+	string sec_uid = 2;
+
+}
+
+message ConversationAddParticipantsResponseBody {
+
+	repeated int64 success_participants = 1;
+	repeated int64 failed_participants = 2;
+	int32 status = 3;
+	string extra_info = 4;
+	int64 check_code = 5;
+	string check_message = 6;
+	repeated SecUidPair sec_success_participants = 7;
+	repeated SecUidPair sec_failed_participants = 8;
+
+}
+
+message ConversationRemoveParticipantsRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	repeated int64 participants = 4;
+
+}
+
+message ConversationRemoveParticipantsResponseBody {
+
+	repeated int64 failed_participants = 1;
+	int32 status = 2;
+	string extra_info = 3;
+	int64 check_code = 4;
+	string check_message = 5;
+	repeated SecUidPair failed_sec_participants = 6;
+
+}
+
+message ConversationLeaveRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message ConversationParticipantsListRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 cursor = 4;
+	int32 limit = 5;
+
+}
+
+message ConversationParticipantsListResponseBody {
+
+	
+
+}
+
+message UpdateConversationParticipantRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	int64 user_id = 4;
+	int32 role = 5;
+	string alias = 6;
+	bool is_alias_set = 7;
+
+}
+
+message UpdateConversationParticipantResponseBody {
+
+	Participant participant = 1;
+	int32 status = 2;
+	string extra_info = 3;
+	int64 check_code = 4;
+	string check_message = 5;
+
+}
+
+message GetConversationCoreInfoRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message GetConversationCoreInfoResponseBody {
+
+	
+
+}
+
+message SetConversationCoreInfoRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	string name = 4;
+	string desc = 5;
+	string icon = 6;
+	string notice = 7;
+	bool is_name_set = 8;
+	bool is_desc_set = 9;
+	bool is_icon_set = 10;
+	bool is_notice_set = 11;
+
+}
+
+message SetConversationCoreInfoResponseBody {
+
+	ConversationCoreInfo conversation_core_info = 1;
+	int32 status = 2;
+	string extra_info = 3;
+	int64 check_code = 4;
+	string check_message = 5;
+
+}
+
+message UpsertConversationCoreExtInfoRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message UpsertConversationCoreExtInfoResponseBody {
+
+	ConversationCoreInfo core_info = 1;
+	int32 status = 2;
+	int64 check_code = 3;
+	string check_message = 4;
+	string extra_info = 5;
+
+}
+
+message SetConversationSettingInfoRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+	bool set_stick_on_top = 4;
+	bool set_mute = 5;
+	bool set_favorite = 6;
+
+}
+
+message SetConversationSettingInfoResponseBody {
+
+	ConversationSettingInfo setting_info = 1;
+	int32 status = 2;
+	int64 check_code = 3;
+	string check_message = 4;
+	string extra_info = 5;
+
+}
+
+message UpsertConversationSettingExtInfoRequestBody {
+
+	string conversation_id = 1;
+	int64 conversation_short_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message UpsertConversationSettingExtInfoResponseBody {
+
+	ConversationSettingInfo setting_info = 1;
+	int32 status = 2;
+	int64 check_code = 3;
+	string check_message = 4;
+	string extra_info = 5;
+
+}
+
+message StrangerConversation {
+
+	int64 conversation_short_id = 1;
+	int32 unread = 2;
+	MessageBody last_message = 3;
+	string conversation_id = 4;
+	repeated Participant participants = 5;
+
+}
+
+message GetStrangerConversationListRequestBody {
+
+	int64 cursor = 1;
+	int64 count = 2;
+	bool show_total_unread = 3;
+
+}
+
+message GetStrangerConversationListResponseBody {
+
+	int64 next_cursor = 1;
+	bool has_more = 2;
+	int32 total_unread = 3;
+	repeated StrangerConversation conversation_list = 4;
+
+}
+
+message GetStrangerMessagesRequestBody {
+
+	int64 conversation_short_id = 1;
+	bool reset_unread_count = 2;
+
+}
+
+message GetStrangerMessagesResponseBody {
+
+	
+
+}
+
+message DeleteStrangerMessageRequestBody {
+
+	int64 server_message_id = 1;
+	int64 conversation_short_id = 2;
+
+}
+
+message DeleteStrangerConversationRequestBody {
+
+	
+
+}
+
+message DeleteStrangerAllConversationRequestBody {
+
+	
+
+}
+
+message MarkStrangerConversationReadRequestBody {
+
+	
+
+}
+
+message MarkStrangerAllConversationReadRequestBody {
+
+	
+
+}
+
+message ModifyPropertyContent {
+
+	int32 operation = 1;
+	string key = 2;
+	string value = 3;
+	string idempotent_id = 4;
+
+}
+
+message ModifyPropertyBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 server_message_id = 4;
+	string client_message_id = 5;
+	repeated ModifyPropertyContent modify_property_content = 6;
+
+}
+
+message ModifyMessagePropertyRequestBody {
+
+	ModifyPropertyBody property_list = 1;
+	string ticket = 2;
+
+}
+
+message ModifyMessagePropertyResponseBody {
+
+	int32 status = 1;
+	int64 version = 2;
+
+}
+
+message GetUploadTokenRequestBody {
+
+	string vsdk_version = 1;
+	int32 token_type = 2;
+
+}
+
+message GetUploadTokenResponseBody {
+
+	string access_key = 1;
+	repeated string hosts = 2;
+	string token = 3;
+	int32 token_type = 4;
+
+}
+
+message ImgOption {
+
+	string tplv = 1;
+	repeated string params = 2;
+	string format = 3;
+	repeated string urls = 100;
+
+}
+
+message VideoOption {
+
+	string vid = 1;
+	string cover_uri = 2;
+	repeated string urls = 100;
+	repeated string cover_urls = 101;
+
+}
+
+message AudioOption {
+
+	string vid = 1;
+	repeated string urls = 100;
+
+}
+
+message FileOption {
+
+	
+
+}
+
+message GetMediaUrlsRequestBody {
+
+	int32 source_appid = 1;
+	string uri = 2;
+	int32 media_type = 3;
+	bool encrypted = 4;
+	repeated ImgOption img_options = 5;
+	repeated VideoOption video_options = 6;
+	repeated AudioOption audio_options = 7;
+	repeated FileOption file_options = 8;
+	string encrypted_uri = 9;
+	int32 read_url_from = 10;
+
+}
+
+message GetMediaUrlsResponseBody {
+
+	string uri = 1;
+	int32 media_type = 2;
+	repeated ImgOption img_options = 3;
+	repeated VideoOption video_options = 4;
+	repeated AudioOption audio_options = 5;
+	repeated FileOption file_options = 6;
+	repeated string encrypted_urls = 7;
+
+}
+
+message GetTicketRequestBody {
+
+	int32 ticket_type = 1;
+	int32 conversation_type = 2;
+	int64 to_id = 4;
+	int64 conversation_short_id = 5;
+
+}
+
+message GetTicketResponseBody {
+
+	
+
+}
+
+message GetUserConversationListRequestBody {
+
+	int32 sort_type = 1;
+	int64 cursor = 2;
+	int32 con_type = 3;
+	int64 limit = 4;
+	int32 include_role = 5;
+	int32 exclude_role = 6;
+	bool with_cold = 8;
+
+}
+
+message GetUserConversationListResponseBody {
+
+	repeated ConversationInfoV2 list = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message ModifyMessageExtRequestBody {
+
+	int64 conversation_short_id = 1;
+	int64 message_id = 2;
+	string ticket = 3;
+
+}
+
+message RequestBody {
+
+	SendMessageRequestBody send_message_body = 100;
+	MessagesPerUserRequestBody messages_per_user_body = 200;
+	GetMessageByIdRequestBody get_message_by_id_body = 211;
+	MessagesInConversationRequestBody messages_in_conversation_body = 301;
+	GetMessagesCheckInfoInConversationRequestBody get_messages_checkinfo_in_conversation_body = 302;
+	SendUserActionRequestBody send_user_action_body = 410;
+	SendInputStatusRequestBody send_input_status_body = 411;
+	DeleteConversationRequestBody delete_conversation_body = 603;
+	MarkConversationReadRequestBody mark_conversation_read_body = 604;
+	ConversationParticipantsListRequestBody conversation_participants_body = 605;
+	DissolveConversationRequestBody dissolve_conversation_body = 614;
+	ConversationAddParticipantsRequestBody conversation_add_participants_body = 650;
+	ConversationRemoveParticipantsRequestBody conversation_remove_participants_body = 651;
+	ConversationLeaveRequestBody leave_conversation_body = 652;
+	UpdateConversationParticipantRequestBody update_conversation_participant_body = 655;
+	DeleteMessageRequestBody delete_message_body = 701;
+	RecallMessageRequestBody recall_message_body = 702;
+	ModifyMessagePropertyRequestBody modify_message_property_body = 705;
+	GetConversationCoreInfoRequestBody get_conversation_core_info_body = 901;
+	SetConversationCoreInfoRequestBody set_conversation_core_info_body = 902;
+	UpsertConversationCoreExtInfoRequestBody upsert_conversation_core_ext_info_body = 904;
+	SetConversationSettingInfoRequestBody set_conversation_setting_info_body = 921;
+	UpsertConversationSettingExtInfoRequestBody upsert_conversation_setting_ext_info_body = 922;
+	GetStrangerMessagesRequestBody get_stranger_messages_body = 1001;
+	DeleteStrangerMessageRequestBody delete_stranger_message_body = 1002;
+	DeleteStrangerConversationRequestBody delete_stranger_conversation_body = 1003;
+	DeleteStrangerAllConversationRequestBody delete_stranger_all_conversation_body = 1004;
+	MarkStrangerConversationReadRequestBody mark_stranger_conversation_read_body = 1005;
+	MarkStrangerAllConversationReadRequestBody mark_stranger_all_conversation_read_body = 1006;
+	GetUploadTokenRequestBody get_upload_token_body = 2003;
+	GetMediaUrlsRequestBody get_media_urls_body = 2004;
+	GetTicketRequestBody get_ticket_body = 2005;
+	GetUserConversationListRequestBody get_conversation_list_body = 2006;
+	BroadcastSendMessageRequestBody broadcast_send_message_body = 2007;
+	BroadcastRecvMessageRequestBody broadcast_recv_message_body = 2008;
+	BroadcastUserCounterRequestBody broadcast_user_counter_body = 2009;
+	ClientACKRequestBody client_ack_body = 2010;
+	CreateVoipRequestBody create_voip_body = 2011;
+	CallVoipRequestBody call_voip_body = 2012;
+	UpdateVoipRequestBody update_voip_body = 2013;
+	ChannelHeartBeatRequestBody channel_heartbeat_body = 2014;
+	ProfileGetInfoRequestBody profile_get_info = 2015;
+	ReportClientMetricsRequestBody report_client_metrics_body = 2016;
+	GetConfigsRequestBody get_configs_body = 2017;
+	ModifyMessageExtRequestBody modify_message_ext_body = 2021;
+	UnReadCountReportRequestBody unread_count_report_body = 2018;
+	BlockMembersRequestBody block_members_body = 2019;
+	BlockConversationRequestBody block_conversation_body = 2020;
+	GetUnreadCountRequestBody get_unread_count_body = 2030;
+	GetBlockListRequestBody get_blocklist_body = 2032;
+	SetBlocklistRequestBody set_blocklist_body = 2033;
+	CheckInBlockListRequestBody check_in_blocklist_body = 2034;
+	MarkMessageRequestBody mark_message_body = 2036;
+	PullMarkMessageRequestBody pull_mark_message_body = 2037;
+	MarkMsgUnreadCountReportRequestBody mark_msg_unread_count_report = 2054;
+	MarkMsgGetUnreadCountRequestBody mark_msg_get_unread_count = 2055;
+	BatchUnmarkMessageRequestBody batch_unmark_message = 2056;
+
+}
+
+message Headers {
+
+}
+
+message Request {
+
+	int32 cmd = 1;
+	int64 sequence_id = 2;
+	string sdk_version = 3;
+	string token = 4;
+	int32 refer = 5;
+	int32 inbox_type = 6;
+	string build_number = 7;
+	RequestBody body = 8;
+	string device_id = 9;
+	string channel = 10;
+	string device_platform = 11;
+	string device_type = 12;
+	string os_version = 13;
+	string version_code = 14;
+    Headers headers = 15;
+    int32 config_id = 16;
+    TokenInfo token_info = 17;
+    int32 auth_type = 18;
+
+}
+
+message TokenInfo {
+
+	int32 mark_id = 1;
+	int32 type = 2;
+	int32 app_id = 3;
+	int64 user_id = 4;
+	int64 timestamp = 5;
+
+}
+
+message NewP2PMessageNotify {
+
+	int32 send_type = 1;
+	int64 sender = 2;
+	string sec_sender = 3;
+	string conversation_id = 4;
+	int64 conversation_short_id = 5;
+	int32 conversation_type = 6;
+	int32 message_type = 7;
+	string content = 8;
+
+}
+
+message MessageInfo {
+
+	int32 status = 1;
+	MessageBody body = 2;
+
+}
+
+message GetMessageByIdRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 server_message_id = 4;
+
+}
+
+message GetMessageByIdResponseBody {
+
+	
+
+}
+
+message ResponseBody {
+
+	SendMessageResponseBody send_message_body = 100;
+	MessagesPerUserResponseBody messages_per_user_body = 200;
+	GetMessageByIdResponseBody get_message_by_id_body = 211;
+	MessagesInConversationResponseBody messages_in_conversation_body = 301;
+	GetMessagesCheckInfoInConversationResponseBody get_messages_checkinfo_in_conversation_body = 302;
+	NewMessageNotify has_new_message_notify = 500;
+	GetConversationsCheckInfoResponseBody get_conversations_checkinfo_body = 615;
+	ConversationParticipantsListResponseBody conversation_participants_body = 605;
+	ConversationAddParticipantsResponseBody conversation_add_participants_body = 650;
+	ConversationRemoveParticipantsResponseBody conversation_remove_participants_body = 651;
+	UpdateConversationParticipantResponseBody update_conversation_participant_body = 655;
+	ModifyMessagePropertyResponseBody modify_message_property_body = 705;
+	GetConversationCoreInfoResponseBody get_conversation_core_info_body = 901;
+	SetConversationCoreInfoResponseBody set_conversation_core_info_body = 902;
+	UpsertConversationCoreExtInfoResponseBody upsert_conversation_core_ext_info_body = 904;
+	SetConversationSettingInfoResponseBody set_conversation_setting_info_body = 921;
+	UpsertConversationSettingExtInfoResponseBody upsert_conversation_setting_ext_info_body = 922;
+	GetStrangerMessagesResponseBody get_stranger_messages_body = 1001;
+	GetUploadTokenResponseBody get_upload_token_body = 2003;
+	GetMediaUrlsResponseBody get_media_urls_body = 2004;
+	GetTicketResponseBody get_ticket_body = 2005;
+	GetUserConversationListResponseBody get_conversation_list_body = 2006;
+	BroadcastSendMessageResponseBody broadcast_send_message_body = 2007;
+	BroadcastRecvMessageResponseBody broadcast_recv_message_body = 2008;
+	BroadcastUserCounterResponseBody broadcast_user_counter_body = 2009;
+	CreateVoipResponseBody create_voip_body = 2011;
+	CallVoipResponseBody call_voip_body = 2012;
+	UpdateVoipResponseBody update_voip_body = 2013;
+	ProfileGetInfoResponseBody profile_get_info = 2015;
+	GetConfigsResponseBody get_configs_body = 2017;
+	UnReadCountReportResponseBody unread_count_report_body = 2018;
+	BlockMembersResponseBody block_members_body = 2019;
+	GetUnreadCountResponseBody get_unread_count_body = 2030;
+	GetBlockListResponseBody get_blocklist_body = 2032;
+	SetBlocklistResponseBody set_blocklist_body = 2033;
+	CheckInBlockListResponseBody check_in_blocklist_body = 2034;
+	MarkMessageResponseBody mark_message_body = 2036;
+	PullMarkMessageResponseBody pull_mark_message_body = 2037;
+	MarkMsgUnreadCountReportResponseBody mark_msg_unread_count_report = 2054;
+	MarkMsgGetUnreadCountResponseBody mark_msg_get_unread_count = 2055;
+	BatchUnmarkMessageResponseBody batch_unmark_message = 2056;
+
+}
+
+message Response {
+
+	int32 cmd = 1;
+	int64 sequence_id = 2;
+	int32 status_code = 3;
+	string error_desc = 4;
+	int32 inbox_type = 5;
+	ResponseBody body = 6;
+	string log_id = 7;
+
+}
+
+message BroadcastSendMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	string content = 4;
+
+}
+
+message BroadcastSendMessageResponseBody {
+
+	int64 server_message_id = 1;
+	string extra_info = 2;
+	int32 status = 3;
+	string client_message_id = 4;
+	int64 check_code = 5;
+	string check_message = 6;
+
+}
+
+message BroadcastRecvMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 cursor = 4;
+	int64 limit = 5;
+	bool reverse = 6;
+	int32 pull_type = 7;
+
+}
+
+message BroadcastRecvMessageResponseBody {
+
+	repeated MessageBody messages = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message ConversationRequest {
+
+	int64 conversation_short_id = 1;
+	int32 conversation_type = 2;
+
+}
+
+message BroadcastUserCounterRequestBody {
+
+	
+
+}
+
+message BroadcastUserInfo {
+
+	int64 conversation_short_id = 1;
+	int32 counter = 2;
+	int32 conversation_type = 3;
+
+}
+
+message BroadcastUserCounterResponseBody {
+
+	
+
+}
+
+message ClientACKRequestBody {
+
+	int64 start_time_stamp = 1;
+	int32 cmd = 2;
+	int32 network_type = 3;
+	string logid = 4;
+	int64 client_time_stamp = 5;
+	int64 server_message_id = 6;
+
+}
+
+message VoipInfo {
+
+	int64 user_id = 1;
+	string device_id = 2;
+	string channel_id = 3;
+	string token = 4;
+	int32 status = 5;
+	int64 caller_id = 6;
+	int64 created_time_ms = 7;
+	int64 updated_time_ms = 8;
+	int64 con_short_id = 9;
+	int32 v_type = 10;
+	int64 srv_msg_id = 11;
+
+}
+
+message CreateVoipRequestBody {
+
+	string idempotent_id = 1;
+	int32 v_type = 2;
+	int64 con_short_id = 3;
+	int64 srv_msg_id = 4;
+	string ref_channel_id = 5;
+	int32 voip_mode = 6;
+
+}
+
+message CreateVoipResponseBody {
+
+	VoipInfo info = 1;
+	int32 status_code = 2;
+	int32 voip_mode = 3;
+
+}
+
+message CallVoipRequestBody {
+
+	repeated int64 callee_ids = 1;
+	string channel_id = 2;
+	int32 v_type = 3;
+
+}
+
+message CallVoipResponseBody {
+
+	VoipInfo info = 1;
+	repeated int64 callee_ids = 2;
+	int32 status = 3;
+	string extra_info = 4;
+	int64 check_code = 5;
+	string check_message = 6;
+	string ref_channel_id = 7;
+	int32 voip_mode = 8;
+
+}
+
+message UpdateVoipRequestBody {
+
+	string channel_id = 1;
+	int32 status = 2;
+	int32 v_type = 3;
+
+}
+
+message UpdateVoipResponseBody {
+
+	VoipInfo info = 1;
+	int32 status_code = 2;
+	int32 voip_mode = 3;
+	repeated int64 callees = 4;
+
+}
+
+message ChannelHeartBeatRequestBody {
+
+	
+
+}
+
+message Profile {
+
+	string nick_name = 1;
+	string protrait = 2;
+	string basic_ext_info = 3;
+	string detail_ext_info = 4;
+
+}
+
+message ProfileGetInfoRequestBody {
+
+	
+
+}
+
+message ProfileGetInfoResponseBody {
+
+	
+
+}
+
+message ClientMetric {
+
+	int32 metric_type = 1;
+	string k = 2;
+	int64 v = 3;
+
+}
+
+message ReportClientMetricsRequestBody {
+
+	
+
+}
+
+message GetConfigsRequestBody {
+
+	
+
+}
+
+message GetConfigsResponseBody {
+
+	int32 version = 1;
+	repeated Config configs = 2;
+
+}
+
+message Config {
+
+	string conf_name = 1;
+	string conf_value = 2;
+
+}
+
+message SendMessageP2PRequestBody {
+
+	int32 send_type = 1;
+	string conversation_id = 2;
+	int32 conversation_type = 3;
+	int64 conversation_short_id = 4;
+	repeated int64 visible_user = 5;
+	repeated int64 invisible_user = 6;
+	int32 message_type = 7;
+	string content = 8;
+
+}
+
+message SendMessageP2PResponseBody {
+
+	
+
+}
+
+message ConvCountReport {
+
+	int64 conv_short_id = 1;
+	int64 unread_count = 2;
+	int32 conversation_type = 3;
+
+}
+
+message UnReadCountReportRequestBody {
+
+	int64 total_unread_count = 1;
+	repeated ConvCountReport conv_unread_count = 2;
+
+}
+
+message UnReadCountReportResponseBody {
+
+	bool set_total_status = 1;
+	repeated int64 failed_conv_list = 2;
+
+}
+
+message GetUnreadCountRequestBody {
+
+	bool get_total = 1;
+	repeated int64 conv_short_id = 2;
+
+}
+
+message GetUnreadCountResponseBody {
+
+	int64 total_unread_count = 1;
+
+}
+
+message GetBlockListRequestBody {
+
+	int64 cursor = 1;
+	int32 limit = 2;
+
+}
+
+message BlockUserInfo {
+
+	int64 user_id = 1;
+	int64 create_time = 2;
+
+}
+
+message GetBlockListResponseBody {
+
+	repeated BlockUserInfo user_info = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message SetBlocklistRequestBody {
+
+	bool set_block_list = 1;
+	repeated int64 blocklist = 2;
+
+}
+
+message SetBlocklistResponseBody {
+
+	
+
+}
+
+message CheckInBlockListRequestBody {
+
+	
+
+}
+
+message CheckInBlockListResponseBody {
+
+	
+
+}
+
+message BlockMembersRequestBody {
+
+	int32 block_status = 1;
+
+}
+
+message BlockMembersResponseBody {
+
+	
+
+}
+
+message BlockConversationRequestBody {
+
+	string conversation_id = 1;
+	int64 conv_short_id = 2;
+	int32 conversation_type = 3;
+	int32 block_status = 4;
+	bool block_normal_only = 5;
+
+}
+
+message GetMessagesCheckInfoInConversationRequestBody {
+
+	int64 conversation_short_id = 2;
+	string conversation_id = 5;
+	int32 conversation_type = 6;
+	int64 cursor_reverse_begin = 3;
+	int64 cursor_reverse_end = 7;
+	int32 expect_msg_total_count = 4;
+
+}
+
+message MessagesCheckInfo {
+
+	int64 head_msg_index = 1;
+	int64 tail_msg_index = 2;
+	int32 msg_count = 3;
+	uint32 indexes_checksum = 4;
+
+}
+
+message GetMessagesCheckInfoInConversationResponseBody {
+
+	repeated MessagesCheckInfo msgs_checkinfo_list = 1;
+	int32 real_msg_total_count = 2;
+	int64 cursor_reverse_next = 4;
+
+}
+
+message ConversationCheckInfo {
+
+	int64 conversation_short_id = 1;
+	string conversation_id = 2;
+	int32 conversation_type = 3;
+
+}
+
+message GetConversationsCheckInfoResponseBody {
+
+	
+
+}
+
+message MarkMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 server_message_id = 4;
+	bool do_action = 5;
+	int32 action_type = 6;
+	int64 sort_time = 7;
+	int64 tag = 8;
+
+}
+
+message MarkMessageResponseBody {
+
+	int64 server_message_id = 1;
+	int64 check_code = 2;
+	string check_message = 3;
+	int32 status = 4;
+
+}
+
+message PullMarkMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 cursor = 4;
+	int64 limit = 5;
+	bool asc = 6;
+	int32 action_type = 7;
+	int64 tag = 8;
+	bool clear_unread_count = 9;
+
+}
+
+message PullMarkMessageResponseBody {
+
+	repeated MessageBody messages = 1;
+	bool has_more = 2;
+	int64 next_cursor = 3;
+
+}
+
+message BatchUnmarkMessageRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	repeated int64 server_message_ids = 4;
+	int32 action_type = 5;
+	int64 tag = 6;
+
+}
+
+message BatchUnmarkMessageResponseBody {
+
+	int64 server_message_id = 1;
+	int64 check_code = 2;
+	string check_message = 3;
+	int32 status = 4;
+
+}
+
+message MarkMsgUnreadCountReportRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	int64 total_unread_count = 4;
+
+}
+
+message MarkMsgUnreadCountReportResponseBody {
+
+	bool set_total_status = 1;
+	repeated int64 failed_tag_list = 2;
+
+}
+
+message MarkMsgGetUnreadCountRequestBody {
+
+	string conversation_id = 1;
+	int32 conversation_type = 2;
+	int64 conversation_short_id = 3;
+	bool get_total = 4;
+	repeated int64 tags = 5;
+
+}
+
+message MarkMsgGetUnreadCountResponseBody {
+
+	int64 total_count = 1;
+
+}
+

@@ -1,17 +1,19 @@
 package seller
 
 import (
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/tebeka/selenium"
 )
 
-var locSession = "data/sessions/"
 var locProfile = "data/profiles/"
 
 type Akun struct {
-	Cookies []http.Cookie
+	Cookies  []http.Cookie
+	Token    string
+	DeviceId string
 }
 
 type AkunService struct {
@@ -34,13 +36,30 @@ func (s *AkunService) getAkunFromSelenium(name string) *Akun {
 		Cookies: cookies,
 	}
 
-	// <-SocketQChan
+	token := <-TokenChan
+
+	akun.Token = token.Token
+	akun.DeviceId = token.PigeonCid
 
 	return akun
 }
 
 func (s *AkunService) GetAkunSession(name string) *Akun {
-	return s.getAkunFromSelenium(name)
+	akun := s.getAkunFromSelenium(name)
+
+	api := SellerApi{
+		Akun: akun,
+	}
+
+	log.Println("getting Token")
+
+	shopInfo := api.GetShopAndCsInfo()
+	tokenInfo := api.GetTokenInfo(shopInfo.CustomerServiceInfo.OuterCid)
+
+	akun.Token = tokenInfo.Token
+	akun.DeviceId = tokenInfo.PigeonCid
+
+	return akun
 }
 
 func CreateAkunService() *AkunService {

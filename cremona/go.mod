@@ -17,4 +17,5 @@ require (
 	github.com/tebeka/selenium v0.9.9 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 )
